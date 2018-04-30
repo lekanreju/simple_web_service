@@ -56,3 +56,5 @@ The app can be run from terminal using the Maven command:
 It's expected that unit tests will be added to verify all functional updates.  
 
 Finally, add postman tests to verify the name search functionality - as well as adding and deleting users (happy path validations are fine for the Postman tests).
+
+minor edit
