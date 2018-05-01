@@ -175,7 +175,7 @@
 					see the Goals documentation page -->
 				</configuration>
 			</plugin>
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>2.17</version>
@@ -194,7 +194,7 @@
 						<failsOnError>true</failsOnError>
 						<includeTestSourceDirectory>true</includeTestSourceDirectory>
 				</configuration>
-			</plugin>
+			</plugin>-->
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>

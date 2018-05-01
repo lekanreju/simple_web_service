@@ -88,6 +88,44 @@ public class UserResourceTest {
 		assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 		assertEquals(expectedResponse, response.getContentAsString());
 	}
+	
+	@Test
+	public void should_list_users_with_query() throws URISyntaxException, JsonParseException, JsonMappingException, IOException {
+		final Dispatcher dispatcher = MockHelper.createMockDispatcher(userResource);
+
+		final Integer userId = 1;
+		final String name = "name";
+
+		final User expectedUser = new User() {
+			{
+				setId(userId);
+				setName(name);
+			}
+		};
+
+		final List<User> expectedUsers = new ArrayList<User>() {
+			{
+				add(expectedUser);
+			}
+		};
+
+		final CollectionType resultType = TypeFactory.defaultInstance().constructCollectionType(List.class, User.class);
+		final String expectedResponse = new ObjectMapper().writer().forType(resultType).writeValueAsString(expectedUsers);
+
+		String query = "Larry";
+		when(userService.listUsers(query)).thenReturn(expectedUsers);
+
+		final MockHttpRequest request = MockHttpRequest.get("/users?q=" + query);
+		final MockHttpResponse response = new MockHttpResponse();
+
+		dispatcher.invoke(request, response);
+
+		verify(userService).listUsers(query);
+		verifyNoMoreInteractions(MockHelper.allDeclaredMocks(this));
+
+		assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+		assertEquals(expectedResponse, response.getContentAsString());
+	}
 
 	@Test
 	public void should_get_user() throws URISyntaxException, JsonParseException, JsonMappingException, IOException {
@@ -143,6 +181,65 @@ public class UserResourceTest {
 		verifyNoMoreInteractions(MockHelper.allDeclaredMocks(this));
 
 		assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
+		assertEquals(expectedResponse, response.getContentAsString());
+	}
+	
+	@Test
+	public void should_add_user() throws URISyntaxException, JsonParseException, JsonMappingException, IOException {
+		final Dispatcher dispatcher = MockHelper.createMockDispatcher(userResource);
+
+		final Integer userId = 1;
+		final String name = "name";
+
+		final User newUser = new User() {
+			{
+				setName(name);
+			}
+		};
+
+		final String expectedResponse = new ObjectMapper().writer().forType(Integer.class).writeValueAsString(userId);
+
+		when(userService.addUser(newUser)).thenReturn(userId);
+
+		final MockHttpRequest request = MockHttpRequest.post("/users");
+		
+		final MockHttpResponse response = new MockHttpResponse();
+
+		dispatcher.invoke(request, response);
+
+		verify(userService).addUser(newUser);
+		verifyNoMoreInteractions(MockHelper.allDeclaredMocks(this));
+
+		assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+		assertEquals(expectedResponse, response.getContentAsString());
+	}
+	
+	@Test
+	public void should_delete_user() throws URISyntaxException, JsonParseException, JsonMappingException, IOException {
+		final Dispatcher dispatcher = MockHelper.createMockDispatcher(userResource);
+
+		final Integer userId = 1;
+		final String name = "name";
+
+		final User user = new User() {
+			{
+				setName(name);
+			}
+		};
+		
+		final MockHttpRequest request = MockHttpRequest.delete("/users/" + userId);
+		
+		when(userService.getUser(userId)).thenReturn(user);
+		
+		final MockHttpResponse response = new MockHttpResponse();
+
+		dispatcher.invoke(request, response);
+
+		verify(userService).deleteUser(userId);
+		verify(userService).getUser(userId);
+		verifyNoMoreInteractions(MockHelper.allDeclaredMocks(this));
+
+		assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 		assertEquals(expectedResponse, response.getContentAsString());
 	}
 

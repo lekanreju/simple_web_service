@@ -40,6 +40,21 @@ public class UserServiceTest {
 
 		assertEquals(expectedUsers, users);
 	}
+	
+	@Test
+	public void should_list_users_with_query() {
+		String query = "Larry";
+		final List<User> expectedUsers = new ArrayList<>();
+
+		when(userMapper.listWithQuery(query)).thenReturn(expectedUsers);
+
+		final List<User> users = userService.listUsers(query);
+
+		verify(userMapper).list();
+		verifyNoMoreInteractions(MockHelper.allDeclaredMocks(this));
+
+		assertEquals(expectedUsers, users);
+	}
 
 
 	@Test
@@ -55,6 +70,32 @@ public class UserServiceTest {
 		verifyNoMoreInteractions(MockHelper.allDeclaredMocks(this));
 
 		assertEquals(expectedUser, user);
+	}
+	
+	@Test
+	public void should_add_user() {
+		final Integer userId = 1;
+		final User newUser = new User();
+
+		when(userMapper.add(newUser)).thenReturn(userId);
+
+		final Integer id = userService.addUser(newUser);
+
+		verify(userMapper).add(newUser);
+		verifyNoMoreInteractions(MockHelper.allDeclaredMocks(this));
+
+		assertEquals(id, userId);
+	}
+	
+	@Test
+	public void should_delete_user() {
+		final Integer userId = 1;
+		
+		userService.deleteUser(userId);
+
+		verify(userMapper).delete(userId);
+		verifyNoMoreInteractions(MockHelper.allDeclaredMocks(this));
+
 	}
 
 }

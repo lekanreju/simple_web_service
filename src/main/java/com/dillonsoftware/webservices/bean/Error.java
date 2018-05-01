@@ -14,6 +14,4 @@ public class Error {
 	public void setMessage(final String message) {
 		this.message = message;
 	}
-
-
 }
